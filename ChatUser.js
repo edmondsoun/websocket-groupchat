@@ -65,18 +65,18 @@ class ChatUser {
   /** Handle joke request. */
 
   handleJoke() {
-      
+
     this.send(JSON.stringify({
       type: "note",
       text: "What did the shy pebble wish for? That she was a little boulder."
     }));
 
   }
-  
+
   /** Handle member list request. */
 
   handleMemberList() {
-      
+
     const userRoom = this.room;
     console.log(userRoom);
 
@@ -89,6 +89,20 @@ class ChatUser {
       text: resp,
     }));
 
+  }
+
+  /** Handle private message between users */
+
+  handlePrivate(text){
+    let textArr = text.split(" ");
+    let username = textArr[1]
+    let message = textArr.splice(2).join(" ")
+
+    //find a way to send to correct user
+    username.send(JSON.stringify({
+      type: "note",
+      text: message
+    }));
   }
 
   /** Handle messages from client:
@@ -108,6 +122,7 @@ class ChatUser {
     else if (msg.type === "chat") this.handleChat(msg.text);
     else if (msg.type === "get-joke") this.handleJoke();
     else if (msg.type === "get-members") this.handleMemberList();
+    else if (msg.type === "private") this.handlePrivate(msg.text);
     else throw new Error(`bad message: ${msg.type}`);
 
   }

@@ -65,6 +65,8 @@ $("form").submit(function (evt) {
     data = { type: "get-joke" };
   } else if ($("#m").val() === "/members") {
     data = { type: "get-members" };
+  } else if ($("#m").val().startsWith("/priv")) {
+    data = { type: "private", text : $("#m").val() };
   } else {
     data = { type: "chat", text: $("#m").val() };
   }
