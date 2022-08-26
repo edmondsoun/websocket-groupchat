@@ -62,6 +62,35 @@ class ChatUser {
     });
   }
 
+  /** Handle joke request. */
+
+  handleJoke() {
+      
+    this.send(JSON.stringify({
+      type: "note",
+      text: "What did the shy pebble wish for? That she was a little boulder."
+    }));
+
+  }
+  
+  /** Handle member list request. */
+
+  handleMemberList() {
+      
+    const userRoom = this.room;
+    console.log(userRoom);
+
+    let resp = "In Room:";
+
+    this.room.members.forEach(member => resp += ` ${member.name},`)
+
+    this.send(JSON.stringify({
+      type: "note",
+      text: resp,
+    }));
+
+  }
+
   /** Handle messages from client:
    *
    * @param jsonData {string} raw message data
@@ -76,17 +105,11 @@ class ChatUser {
     let msg = JSON.parse(jsonData);
 
     if (msg.type === "join") this.handleJoin(msg.name);
-    else if (msg.type === "chat") {
-      console.log(msg)
-      this.handleChat(msg.text);
-    }
-    else if (msg.type === "get-joke") {
-      console.log(msg)
-      this.send(JSON.stringify({
-        type : "note",
-        text : " this is a joke "}))
-    }
+    else if (msg.type === "chat") this.handleChat(msg.text);
+    else if (msg.type === "get-joke") this.handleJoke();
+    else if (msg.type === "get-members") this.handleMemberList();
     else throw new Error(`bad message: ${msg.type}`);
+
   }
 
   /** Connection was closed: leave room, announce exit to others. */
